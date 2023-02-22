@@ -1,34 +1,31 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect,useMemo,useState } from "react";
 import styles from "../styles/Home.module.css";
-
-const catImages: string[] = [
-  "https://cdn2.thecatapi.com/images/bpc.jpg",
-  "https://cdn2.thecatapi.com/images/eac.jpg",
-  "https://cdn2.thecatapi.com/images/6qi.jpg",
-];
-
-const randomCatImage = (): string => {
-  const index = Math.floor(Math.random() * catImages.length);
-  return catImages[index];
-};
+import { CatData, CatsApiResponse } from "./api/cats";
+import useSWR from 'swr';
 
 const Home: NextPage = () => {
-  const [catImageUrl, setCatImageUrl] = useState(
-    "https://cdn2.thecatapi.com/images/bpc.jpg"
-  );
-  const fetchCatImage = async () => {
-    const res = await fetch("https://api.thecatapi.com/v1/images/search");
-    const result = res.json();
-  };
+  const [catImageUrl, setCatImageUrl] = useState("https://cdn2.thecatapi.com/images/bpc.jpg");
+  const [catComment, setCatComment] = useState("こんにちは");
 
-  const handleClick = () => {
-    console.log("a");
+  const fetchCatData =async (): Promise<CatData> => {
+    const res = await fetch("/api/cats/");
 
-    setCatImageUrl(randomCatImage());
-  };
+    // CatsApiResponseで定義した{cat: CatData}の形になっている
+    const result = await res.json();
+    // CatDataのオブジェクトだけ必要
+    const catData: CatData = result.cat;
+
+    return catData;
+  }
+
+  const handleClick =async () => {
+    const data = await fetchCatData();
+    setCatImageUrl(data.imagePath);
+    setCatComment(data.comment);
+  }
 
   return (
     <div
@@ -39,8 +36,11 @@ const Home: NextPage = () => {
         justifyContent: "center",
       }}
     >
-      <h1>猫画像アプリ</h1>
-      <img src={catImageUrl} width={500} alt="neko" />
+      <h1>猫画像アプリ一覧</h1>
+      <img src={catImageUrl} />
+      <p>{catComment}</p>
+  
+      
       <button type="button" style={{ marginTop: "20px" }} onClick={handleClick}>
         今日の猫さん
       </button>
