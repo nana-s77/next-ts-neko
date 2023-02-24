@@ -24,13 +24,13 @@ export type CatsApiResponse = {
 }
 
 const catData: CatData[] = [
-  { id: "1", name: "neko1", imagePath: "https://cdn2.thecatapi.com/images/bpc.jpg", comment: "今日もいい天気ですのにゃ"},
-  { id: "2", name: "neko2", imagePath: "https://cdn2.thecatapi.com/images/eac.jpg", comment: "かわいいのにゃ〜"},
-  { id: "3", name: "neko2", imagePath: "https://cdn2.thecatapi.com/images/eac.jpg", comment: "3なのにゃ"},
-  { id: "4", name: "neko2", imagePath: "https://cdn2.thecatapi.com/images/eac.jpg", comment: "4なのにゃ"},
-  { id: "5", name: "neko2", imagePath: "https://cdn2.thecatapi.com/images/eac.jpg", comment: "5なのにゃ"},
-  { id: "6", name: "neko2", imagePath: "https://cdn2.thecatapi.com/images/eac.jpg", comment: "6なのにゃ"},
-  { id: "7", name: "neko2", imagePath: "https://cdn2.thecatapi.com/images/eac.jpg", comment: "7なのにゃ"},
+  { id: "1", name: "neko1", imagePath: "https://today-pon.s3.ap-northeast-1.amazonaws.com/IMG_1898.jpg", comment: "今日もいい天気ですのにゃ"},
+  { id: "2", name: "neko2", imagePath: "https://today-pon.s3.ap-northeast-1.amazonaws.com/IMG_1881.jpg", comment: "かわいいのにゃ〜"},
+  { id: "3", name: "neko3", imagePath: "https://today-pon.s3.ap-northeast-1.amazonaws.com/IMG_1899.jpg", comment: "3なのにゃ"},
+  { id: "4", name: "neko4", imagePath: "https://cdn2.thecatapi.com/images/eac.jpg", comment: "4なのにゃ"},
+  { id: "5", name: "neko5", imagePath: "https://cdn2.thecatapi.com/images/eac.jpg", comment: "5なのにゃ"},
+  { id: "6", name: "neko6", imagePath: "https://cdn2.thecatapi.com/images/eac.jpg", comment: "6なのにゃ"},
+  { id: "7", name: "neko7", imagePath: "https://cdn2.thecatapi.com/images/eac.jpg", comment: "7なのにゃ"},
 ];
 
 const randomCatData = (): CatData => {
@@ -46,13 +46,12 @@ export default async function catsApi(
   req: NextApiRequest,
   res: NextApiResponse<CatsApiResponse>
 ) {
-  const id = req.query.id as string;
   const cat = randomCatData();
 
   if(cat) {
     res.status(200).json({cat});
     return cat;
   }else {
-    res.status(400).json({ debugMessage: `Cat {id =${id} not found}`})
+    res.status(400).json({ debugMessage: `Not Found`})
   }
 }
