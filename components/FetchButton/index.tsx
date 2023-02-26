@@ -6,7 +6,7 @@ type Props = {
 
 export const FetchButton = ({ onClick }: Props) => {
     return (
-        <button className={styles.button}>
+        <button className={styles.button} onClick={onClick}>
             Click
         </button>
     )

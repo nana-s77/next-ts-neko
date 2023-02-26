@@ -1,0 +1,28 @@
+.commentBalloon {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.comment {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  background-color: #fff;
+  padding: 8px 10px;
+  margin-right: 10px;
+  border-radius: 20px;
+  line-height: 1.6;
+  z-index: 2;
+  font-family: "Hachi Maru Pop", sans-serif;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 63%;
+    right: -15px;
+    margin-top: -15px;
+    border: 8px solid transparent;
+    border-left: 8px solid #fff;
+  }
+}

@@ -7,34 +7,35 @@ import { CatData, CatsApiResponse } from "./api/cats";
 import { CatImage } from "../components/CatImage";
 import { FetchButton } from "../components/FetchButton";
 import { Mv } from "../components/Mv";
+import { CommentBalloon } from "../components/CommentBalloon";
 
 const Home: NextPage = () => {
-  const [catImageUrl, setCatImageUrl] = useState("https://today-pon.s3.ap-northeast-1.amazonaws.com/IMG_1899.jpg");
-  const [catComment, setCatComment] = useState("こんにちは");
+  const [catImageUrl, setCatImageUrl] = useState("");
+  const [catComment, setCatComment] = useState("");
+  // const [catImageUrl, setCatImageUrl] = useState("https://today-pon.s3.ap-northeast-1.amazonaws.com/IMG_1899.jpg");
+  // const [catComment, setCatComment] = useState("こんにちは");
 
   const fetchCatData =async (): Promise<CatsApiResponse> => {
-    // try {
-      const res = await fetch("/api/cats/");
-  
-      // CatsApiResponseで定義した{cat: CatData}の形になっている
-      const result: Promise<CatsApiResponse> = await res.json();
-      // CatDataのオブジェクトだけ必要
-      // const catData: CatData = result.cat;
-      console.log(result);
-      
-  
-      return result;
-    // } 
+    const res = await fetch("/api/cats/");
+
+    // CatsApiResponseで定義した{cat: CatData}の形になっている
+    const result: Promise<CatsApiResponse> = await res.json();
+
+    return result;
   }
 
   const handleClick =async () => {
-    console.log("click");
     const data = await fetchCatData();
-    const catData = data.cat as CatData;
-    // const data = await fetchCatData();
-    setCatImageUrl(catData.image_path);
-    setCatComment(catData.comment);
+    const catData = data.cat;
+
+    if(catData) {
+      setCatImageUrl(catData.image_path);
+      setCatComment(catData.comment);
+    } else {
+      console.log(`${data.debugMessage}`);
+    }
   }
+
 
   return (
     <div
@@ -43,18 +44,22 @@ const Home: NextPage = () => {
       <h1>
         <Mv />
       </h1>
-      <CatImage catImageUrl={catImageUrl} />
-      <p>{catComment}</p>
-      {/* {catImageUrl ? 
-        <CatImage catImageUrl={catImageUrl} />
-        : ""}
-      {catComment ?
-        <p>{catComment}</p>
-        : ""
-      } */}
+      <div className={styles.buttonWrap}>
+        <FetchButton onClick={handleClick} />
+      </div>
+
+      <div className={styles.fetchArea}>
+        {catImageUrl ? 
+          <CatImage catImageUrl={catImageUrl} />
+          : ""}
+
+        {catComment ?
+          <CommentBalloon comment={catComment} />
+          : ""
+        }
+      </div>
   
       
-      <FetchButton onClick={handleClick} />
     </div>
   );
 };
