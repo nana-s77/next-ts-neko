@@ -1,49 +1,60 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
-import { useEffect,useMemo,useState } from "react";
-import styles from "../styles/Home.module.css";
+
+import { useState } from "react";
+import styles from "../styles/Home.module.scss";
 import { CatData, CatsApiResponse } from "./api/cats";
-import useSWR from 'swr';
+import { CatImage } from "../components/CatImage";
+import { FetchButton } from "../components/FetchButton";
+import { Mv } from "../components/Mv";
 
 const Home: NextPage = () => {
-  const [catImageUrl, setCatImageUrl] = useState("https://cdn2.thecatapi.com/images/bpc.jpg");
+  const [catImageUrl, setCatImageUrl] = useState("https://today-pon.s3.ap-northeast-1.amazonaws.com/IMG_1899.jpg");
   const [catComment, setCatComment] = useState("こんにちは");
 
-  const fetchCatData =async (): Promise<CatData> => {
-    const res = await fetch("/api/cats/");
-
-    // CatsApiResponseで定義した{cat: CatData}の形になっている
-    const result = await res.json();
-    // CatDataのオブジェクトだけ必要
-    const catData: CatData = result.cat;
-
-    return catData;
+  const fetchCatData =async (): Promise<CatsApiResponse> => {
+    // try {
+      const res = await fetch("/api/cats/");
+  
+      // CatsApiResponseで定義した{cat: CatData}の形になっている
+      const result: Promise<CatsApiResponse> = await res.json();
+      // CatDataのオブジェクトだけ必要
+      // const catData: CatData = result.cat;
+      console.log(result);
+      
+  
+      return result;
+    // } 
   }
 
   const handleClick =async () => {
+    console.log("click");
     const data = await fetchCatData();
-    setCatImageUrl(data.imagePath);
-    setCatComment(data.comment);
+    const catData = data.cat as CatData;
+    // const data = await fetchCatData();
+    setCatImageUrl(catData.image_path);
+    setCatComment(catData.comment);
   }
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      className={styles.page}
     >
-      <h1>猫画像アプリ一覧</h1>
-      <img src={catImageUrl} />
+      <h1>
+        <Mv />
+      </h1>
+      <CatImage catImageUrl={catImageUrl} />
       <p>{catComment}</p>
+      {/* {catImageUrl ? 
+        <CatImage catImageUrl={catImageUrl} />
+        : ""}
+      {catComment ?
+        <p>{catComment}</p>
+        : ""
+      } */}
   
       
-      <button type="button" style={{ marginTop: "20px" }} onClick={handleClick}>
-        今日の猫さん
-      </button>
+      <FetchButton onClick={handleClick} />
     </div>
   );
 };
