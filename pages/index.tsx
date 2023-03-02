@@ -12,8 +12,6 @@ import { CommentBalloon } from "../components/CommentBalloon";
 const Home: NextPage = () => {
   const [catImageUrl, setCatImageUrl] = useState("");
   const [catComment, setCatComment] = useState("");
-  // const [catImageUrl, setCatImageUrl] = useState("https://today-pon.s3.ap-northeast-1.amazonaws.com/IMG_1899.jpg");
-  // const [catComment, setCatComment] = useState("こんにちは");
 
   const fetchCatData =async (): Promise<CatsApiResponse> => {
     const res = await fetch("/api/cats/");
@@ -29,7 +27,7 @@ const Home: NextPage = () => {
     const catData = data.cat;
 
     if(catData) {
-      setCatImageUrl(catData.image_path);
+      setCatImageUrl(catData.image_url);
       setCatComment(catData.comment);
     } else {
       console.log(`${data.debugMessage}`);
@@ -58,8 +56,6 @@ const Home: NextPage = () => {
           : ""
         }
       </div>
-  
-      
     </div>
   );
 };

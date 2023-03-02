@@ -5,9 +5,7 @@ import { open } from 'sqlite';
 export type CatData = {
   id: number,
   name: string,
-  image_path: string,
-  uploader_name: string,
-  posted_date: Date,
+  image_url: string,
   comment: string,
 }
 
