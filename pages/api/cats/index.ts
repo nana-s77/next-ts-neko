@@ -31,7 +31,7 @@ export default async function catsApi(
 
   const db = await open(
     // プロジェクトルートからのpathを書く
-    {filename: './cats.db',
+    {filename: 'https://today-pon.s3.ap-northeast-1.amazonaws.com/cats.db',
     driver: sqlite3.Database}
   )
   
