@@ -14,7 +14,13 @@ const Home: NextPage = () => {
   const [catComment, setCatComment] = useState("");
 
   const fetchCatData =async (): Promise<CatsApiResponse> => {
-    const res = await fetch("/api/cats/");
+    const res = await fetch("/api/cats/", {
+      // body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // method: "GET",
+    });
 
     // CatsApiResponseで定義した{cat: CatData}の形になっている
     const result: Promise<CatsApiResponse> = await res.json();
