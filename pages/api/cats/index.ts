@@ -1,5 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { FC, useEffect, useState } from 'react';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { collection, getDocs, getFirestore } from 'firebase/firestore';
 import { firebaseApp, TARGET_COLLECTION_NAME } from '../../../libs/firebase';
 
@@ -21,19 +20,6 @@ const randomCatData = (catData: CatData[]): CatData => {
   const result = catData[index];
   return result;
 };
-
-// firebaseからデータを取得
-const firebase =async () => {
-    const db = getFirestore(firebaseApp);
-    const col = collection(db, TARGET_COLLECTION_NAME);
-    const snapShot = await getDocs(col);
-    const catDataArray: any = [];
-    snapShot.forEach((doc) => {
-      catDataArray.push(doc.data());
-    })
-    return catDataArray;
-}
-
 
 // apiのエントリポイント
 // api Routesでは必ず関数をexportする必要がある
