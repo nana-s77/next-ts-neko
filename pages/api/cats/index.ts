@@ -1,6 +1,7 @@
-import sqlite3 from 'sqlite3';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { open } from 'sqlite';
+import { FC, useEffect, useState } from 'react';
+import { collection, getDocs, getFirestore } from 'firebase/firestore';
+import { firebaseApp, TARGET_COLLECTION_NAME } from '../../../libs/firebase';
 
 export type CatData = {
   id: number,
@@ -21,6 +22,19 @@ const randomCatData = (catData: CatData[]): CatData => {
   return result;
 };
 
+// firebaseからデータを取得
+const firebase =async () => {
+    const db = getFirestore(firebaseApp);
+    const col = collection(db, TARGET_COLLECTION_NAME);
+    const snapShot = await getDocs(col);
+    const catDataArray: any = [];
+    snapShot.forEach((doc) => {
+      catDataArray.push(doc.data());
+    })
+    return catDataArray;
+}
+
+
 // apiのエントリポイント
 // api Routesでは必ず関数をexportする必要がある
 // ランダムな猫のデータを返すApiがほしい
@@ -28,17 +42,22 @@ export default async function catsApi(
   req: NextApiRequest,
   res: NextApiResponse<CatsApiResponse>
 ) {
+  // firebaseからデータを取得
+  const firebase =async () => {    
+    const db = getFirestore(firebaseApp);
+    const col = collection(db, TARGET_COLLECTION_NAME);
+    const snapShot = await getDocs(col);
+    const catDataArray: any = [];
+    snapShot.forEach((doc) => {
+      catDataArray.push(doc.data());
+    })
+    return catDataArray;
+  }
 
-  const db = await open(
-    // プロジェクトルートからのpathを書く
-    {filename: 'https://today-pon.s3.ap-northeast-1.amazonaws.com/cats.db',
-    driver: sqlite3.Database}
-  )
-  
-  // db接続 catテーブルから取得
-  const catData:CatData[]  = await db.all('select * from cats');
+  const catData: CatData[] = await firebase();
 
   const cat = randomCatData(catData);
+
 
   if(cat) {
     res.status(200).json({cat});
